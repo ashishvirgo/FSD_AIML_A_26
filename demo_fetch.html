@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo fetch in js</title>
+    <style>
+        table{
+            width: 80%;
+            margin: auto;
+            padding: 10px;
+            font-size: 25px;
+            color:red;
+            border: 2px solid blue;
+        }
+    
+    </style>
+    
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Sr. No.</th>
+                <th>Title</th>
+                <th>Image</th>
+                <th>QR Code</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody id="data">
+
+        </tbody>
+    </table>
+    <script>
+        const ele=document.getElementById("data");
+        const URL="https://dummyjson.com/products?limit=100&skip=5";
+    async function loadProducts(){
+       try{
+         const res=await fetch(URL);
+         const data=await res.json();
+         console.log("Data=",data.products);
+         let row="";
+         data.products.map((i,index)=>{
+            row+=`
+            <tr>
+                <td>${index+1}</td>
+                <td>${i.title}</td>
+                <td><img src=${i.images[0]}/></td>
+                <td><img src=${i.meta.qrCode}/></td>
+                <td>${i.category}</td>
+                <td>${i.price}₹</td>
+                <td>${i.rating}</td>
+                <td>${i.stock}</td>
+             </tr>   
+            `;
+            ele.innerHTML=row;
+            
+         })
+       }
+       catch(err){
+        console.log("Error:",err);
+        ele.innerHTML=`
+        <tr>
+            <td>Network error</td>
+
+         </tr>   `;
+       }
+    }
+    loadProducts();
+    </script>
+</body>
+</html>
